@@ -13,23 +13,15 @@ app.config['TEMPLATES_AUTO_RELOAD'] = True
 def index():
    return render_template('index.html')
 
-@app.route('/results', methods=['PUT'])
+@app.route('/results', methods=['GET'])
 def results():
  #    messages = request.args['messages']  # counterpart for url_for()
     messages = session['messages']       # counterpart for session
     print(json.loads(messages))
     messages = json.loads(messages)
-    # return app.send_static_file('templates\results.html')
-    # if request.method == 'GET':
+        
+    return render_template("results.html", myprms=[messages,'potato'])
     
-    content = render_template("results.html", myprms=[json.dumps(messages),"potato"])
-    return Response(
-            content,
-            content_type='text/javascript; charset=UTF-8'
-        )
-
-#   return render_template('results.html', my_data=messages, p1='potato')
-
 
 @app.route('/run_sim', methods=['POST'])
 def run_sim():
