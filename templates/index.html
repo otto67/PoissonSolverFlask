@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<BR/><BR/>     
+<h2>Input interface for Python Poisson solver -- <span id="datetime"></span>  </h2>
+<BR/><BR/>
+<script>
+    var dt = new Date();
+    document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
+
+    
+    function updateRHSLabel(){
+        // Find which element in the list is selected
+        // Add text to label and to input field accordingly
+        
+        var selectedValue = document.getElementById("rhs_choice").value;        
+        if (selectedValue == "Linear"){
+            document.getElementById("rhs_coeffs").value = '1,1,1';
+            document.getElementById("rhs_label").innerHTML = 'Ax + By + C';
+        }
+        else if (selectedValue == "Quadratic"){
+            document.getElementById("rhs_coeffs").value = '1,1,1,1,1,1';
+            document.getElementById("rhs_label").innerHTML = 'Ax^2 + By^2 + Cxy + Dx + Ey + F';
+        }
+        else {
+            document.getElementById("rhs_coeffs").value = '1';
+            document.getElementById("rhs_label").innerHTML = 'Enter a constant value';
+        }
+    }
+
+    function getInputValues(){
+
+        // Selecting the input element and get its value 
+       var strng_arr = prepareSimulationData();
+
+        alert("Run simulation not implemented. \n You entered the following input: \n\n " +
+         strng_arr); 
+//       window.sessionStorage.setItem('my_selected_values', strng);
+//       alert(window.sessionStorage.getItem('my_selected_values'));
+        const URL = '/run_sim'
+        const xhr = new XMLHttpRequest();
+        sender = JSON.stringify(strng_arr)
+        xhr.open('POST', URL);
+        xhr.send(sender);   
+    }
+
+    function parseInputFile(fileContentsInString){
+        var i;
+        var lines = fileContentsInString.split('\n');
+        
+        for (i=0; i<lines.length; i++){
+            var tmp = lines[i].split(':');  
+            if (tmp.length != 2){ 
+                return; 
+            }
+
+            if (tmp[0].trim() == "Right hand side"){
+                if (tmp[1].trim() == "Linear")
+                    document.getElementById("rhs_choice").selectedIndex = 1;
+                else if (tmp[1].trim() == "Quadratic")
+                    document.getElementById("rhs_choice").selectedIndex = 0;
+                else 
+                    document.getElementById("rhs_choice").selectedIndex = 2;
+            }
+
+            else if (tmp[0].trim() == "Domain")
+                document.getElementById("domain").value = tmp[1].trim();
+            else if (tmp[0].trim() == "rhs_coeff")
+                document.getElementById("rhs_coeffs").value = tmp[1].trim();
+            else if (tmp[0].trim() == "Number of nodes")
+                document.getElementById("nno").value = tmp[1].trim();
+            else if (tmp[0].trim() == "Method of solution")
+                document.getElementById("solmet").value = tmp[1].trim();
+            else if (tmp[0].trim() == "bclow")
+                document.getElementById("lowbound").value = tmp[1].trim();
+            else if (tmp[0].trim() == "bcupp")
+                document.getElementById("uppbound").value = tmp[1].trim();
+            else if (tmp[0].trim() == "bcleft")
+                document.getElementById("leftbound").value = tmp[1].trim();
+            else if (tmp[0].trim() == "bcright")
+                document.getElementById("rightbound").value = tmp[1].trim();
+        }
+    }
+
+
+    function readFromFile(input){
+        var fileToRead = input.files[0]; //  document.getElementById("readfile").files[0];
+        if (!fileToRead)
+            alert("No file selected");
+        else { 
+            var reader = new FileReader();
+            reader.readAsText(fileToRead);
+            reader.onload = function() {
+                parseInputFile(reader.result)
+            };
+            reader.onerror = function() {
+                alert(reader.error);
+            };
+        }
+    }
+
+    function prepareSimulationData(){
+        var retval = [];
+        var tmp;
+        tmp ="Domain:" + document.getElementById("domain").value;
+        retval.push(tmp);
+        tmp = "Number of nodes:" + document.getElementById("nno").value;
+        retval.push(tmp);
+        tmp = "Method of solution:" + document.getElementById("solmet").value;
+        retval.push(tmp);
+        tmp = "rhs_coeff:" + document.getElementById("rhs_coeffs").value;
+        retval.push(tmp);
+        tmp = "Right hand side:" + document.getElementById("rhs_choice").value;
+        retval.push(tmp);
+        tmp = "bcright:" + document.getElementById("rightbound").value;
+        retval.push(tmp);
+        tmp = "bcupp:" + document.getElementById("uppbound").value;
+        retval.push(tmp);
+        tmp = "bcleft:" + document.getElementById("leftbound").value;
+        retval.push(tmp);
+        tmp = "bclow:" + document.getElementById("lowbound").value;
+        retval.push(tmp);
+        return retval;
+    }
+
+    function getSelectionAsString(){
+        var retval = "Domain:";
+        retval += document.getElementById("domain").value;
+        retval += "\nNumber of nodes:";
+        retval += document.getElementById("nno").value;
+        retval += "\nMethod of solution:";
+        retval += document.getElementById("solmet").value;
+        retval += "\nrhs_coeff:";
+        retval += document.getElementById("rhs_coeffs").value;
+        retval += "\nRight hand side:";
+        retval += document.getElementById("rhs_choice").value;
+        retval += "\nbcright:";
+        retval += document.getElementById("rightbound").value;
+        retval += "\nbcupp:";
+        retval += document.getElementById("uppbound").value;
+        retval += "\nbleft:";
+        retval += document.getElementById("leftbound").value;
+        retval += "\nbclow:";
+        retval += document.getElementById("lowbound").value;
+
+        return retval;
+    }
+
+    function downloadInput(){
+
+        var filename = "tmp.txt";
+        var text = getSelectionAsString();
+        var blob = new Blob([text], {type:'text/plain'});
+        var link = document.createElement("a");
+        link.download = filename;
+        link.innerHTML = "Download File";
+        link.href = window.URL.createObjectURL(blob);
+        document.body.appendChild(link);
+
+    }
+
+</script>
+
+<p style="margin-left: 40px">
+<label for="readfile">Read input from file: </label>
+<input type="file" dialogtype="read" id="readfile" onchange="readFromFile(this)" accept = ".txt" />
+<BR/><BR/>
+<BR/><BR/>
+
+<label> Right hand side: </label>
+<select name="rhs_choice" id="rhs_choice" onchange="updateRHSLabel()">
+    <option value="Quadratic">Quadratic</option>
+    <option value="Linear">Linear</option>
+    <option value="Constant">Constant</option>
+  </select>
+
+<BR/><BR/>
+<label id="rhs_label"> Ax^2 + By^2 + Cxy + Dx + Ey + F </label>
+<BR/>
+<input type="text" value="1,1,1,1,1,1" id="rhs_coeffs">
+
+<BR/><BR/>
+<BR/><BR/>
+<label> Domain: </label>
+<input type="text" value="[0,1]x[0,1]" id="domain">
+<BR/><BR/>
+
+<label> Number of nodes: </label>
+<input type="text" value="900" id="nno">
+<BR/><BR/>
+
+<label> Solution method: </label>
+<select name="solmet" id="solmet">
+    <option value="FDM">FDM</option>
+    <option value="FEM">FEM</option>
+  </select>
+<BR/><BR/>
+
+<label> Boundary conditions: </label> <BR/> <BR/> 
+<label> Lower boundary: </label> <input type="text" value="0" id="lowbound"> <BR/><BR/>
+<label> Upper boundary: </label> <input type="text" value="0" id="uppbound"><BR/><BR/>
+<label> Left boundary: </label> <input type="text" value="0" id="leftbound"> <BR/><BR/>
+<label> Right boundary: </label> <input type="text" value="0" id="rightbound"><BR/><BR/>
+
+</p>
+
+
+<input type = "button" onclick="getInputValues()" value = "Run simulation">  
+<BR/><BR/>
+<input type = "button" onclick = "downloadInput()" value = "Download input file" />
+
+</body>
+</html> 
