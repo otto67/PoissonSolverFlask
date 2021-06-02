@@ -1,13 +1,26 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>{%myprms[1]%}</title>
+    <title>Simulation results</title>
 </head>
 <body>
     <div>
+        <h1>Results for input data: </h1>
+        <h3> 
+            {%for value in input_data%}
+                <p>{{ value }}</p>
+            {%endfor%}
+        </h3>
+
          <p>
-            <h1>Hello, data is: </h1>
-            <h3> {%myprms[0]%}</h3>
+            <h1>Result plots: </h1>
+            <h3> 
+                {%for value in result_data%}
+                    <p><img src= {{ value }} alt="none"></p>
+                    <p>{{value}}</p>
+                {%endfor%}
+            </h3>
+           
          </p>
     </div>
 </body>

@@ -29,20 +29,20 @@
         }
     }
 
-    function getInputValues(){
+    function runSimulation(){
 
         // Selecting the input element and get its value 
-       var strng_arr = prepareSimulationData();
+        var strng_arr = prepareSimulationData();
 
-        alert("Run simulation not implemented. \n You entered the following input: \n\n " +
-         strng_arr); 
-//       window.sessionStorage.setItem('my_selected_values', strng);
-//       alert(window.sessionStorage.getItem('my_selected_values'));
         const URL = '/run_sim'
         const xhr = new XMLHttpRequest();
         sender = JSON.stringify(strng_arr)
         xhr.open('POST', URL);
-        xhr.send(sender);   
+        xhr.send(sender);
+        xhr.onreadystatechange = function() {
+        if (xhr.readyState == XMLHttpRequest.DONE) 
+            window.location.href = '/results';
+        }
     }
 
     function parseInputFile(fileContentsInString){
@@ -206,7 +206,7 @@
 </p>
 
 
-<input type = "button" onclick="getInputValues()" value = "Run simulation">  
+<input type = "button" onclick="runSimulation()" value = "Run simulation">  
 <BR/><BR/>
 <input type = "button" onclick = "downloadInput()" value = "Download input file" />
 

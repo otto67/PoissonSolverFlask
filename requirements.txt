@@ -1,2 +1,5 @@
 PySimpleGUI
 flask
+markupsafe
+json
+os
