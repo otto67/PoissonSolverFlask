@@ -9,6 +9,6 @@ The code solves a Poisson equation with bc's and right hand side prescribed thro
 
 ### Todo 
 1. Finish GUI
-2. Copy Python code for solver
+2. Add plots to results file
 3. ...
 4. ...
