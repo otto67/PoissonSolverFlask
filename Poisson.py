@@ -91,14 +91,14 @@ class Poisson:
         y = np.arange(self.ymin, self.ymax, (self.ymax - self.ymin) / self.nnoy)
         X, Y = np.meshgrid(x, y)
 
-
-        fig = plt.figure(figsize=(20, 20))
-        fig.suptitle('Plots of solution')
-
+        fig = plt.figure()
         ax = fig.add_subplot(2, 2, 1, projection='3d')
-
+    
         ax.plot_surface(X, Y, self.solu, cmap='viridis', edgecolor='none')
         ax.set_title('Surface plot u(x,y)')
+        ax.set_xlabel('X')
+        ax.set_ylabel('Y')
+        ax.set_zlabel('u(x,y)')
 
         ax = fig.add_subplot(2, 2, 2)
         ax.set_title('2D projection of u(x,y)')
@@ -109,14 +109,20 @@ class Poisson:
         ax.set_title('Fake test vector plot of u(x,y)')
         # ax.set_ylabel('Damped oscillation')
         plt.quiver(X, Y, self.solu, self.solu)
-
         ax = fig.add_subplot(2, 2, 4)
         ax.set_title('Contour lines for u(x,y)')
         plt.contour(X, Y, self.solu)
 
+        plt.subplots_adjust(left=0.1,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.6, 
+                    hspace=0.4)
+
         mypath = "static" + os.sep + "plot.png"
         plt.savefig(mypath, dpi=300)
-     #   plt.show()
+     
 
     # Compare nodal values of solution
     def compare2analytic(self):

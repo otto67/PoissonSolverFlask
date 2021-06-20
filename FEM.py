@@ -111,7 +111,14 @@ class FEM:
         ax.set_title('Contour lines for u(x,y)')
         plt.contour(X, Y, solu)
 
-        mypath = "results" + os.sep + "plot.png"
+        plt.subplots_adjust(left=0.1,
+                    bottom=0.1, 
+                    right=0.9, 
+                    top=0.9, 
+                    wspace=0.6, 
+                    hspace=0.4)
+
+        mypath = "static" + os.sep + "plot.png"
         plt.savefig(mypath, dpi=300)
         # plt.show()
 

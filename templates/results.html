@@ -6,22 +6,29 @@
 </head>
 <body>
 
+<script>
+
+function getDisplayString(rhs_as_string){
+    alert(rhs_as_string)
+}
+
+</script>
+
 
     <div>
-        <h1>Results for input data: </h1>
+        <h1>Simulation results: </h1>
         <br>
         <br>
 
         <table>
             <tr id="inputHeader">
-            <th>Input</th>
-            <th>Value</th>
+            <th>Input data</th>
             </tr>
 
             {%for value in input_data%}            
             <tr>
                 {% if value.split(':')[0] == "rhs_coeff" %}
-                 
+                
                 {% elif value.split(':')[0] == "bclow" %}
                 <td>Boundary conditions on lower boundary</td>
                 <td class="centerCell">{{ value.split(':')[1] }}</td>
@@ -40,16 +47,43 @@
 
 
                 {% elif value.split(':')[0] == "Right hand side" %}
-                <td>{{ value.split(':')[0] }}</td>
-                <td class="centerCell">{{ value.split(':')[1] }}</td>
+                <td>{{ value.split(':')[0] }} ({{value.split(':')[1]}})</td>
+                {% set rhs_type = value.split(':')[1] %}
                     {%for tmp in input_data%}
-
                     {% if tmp.split(':')[0] == "rhs_coeff" %}
-                <tr>
-                    <td>Right hand side coefficients</td>
-                    <td class="centerCell">{{ tmp.split(':')[1] }}</td>
-                </tr>
+
+                    {% set coeffs = tmp.split(':')[1].split(',') %}
+
+                    {% if rhs_type == "Quadratic" %}
+                   
+                     
+                    <td class="centerCell">{{ coeffs[0]}}x<sup>2</sup>
+                    {% if coeffs[1][0] != '-' %} + {%endif%} 
+                    {{coeffs[1]}}y<sup>2</sup> 
+                    {% if coeffs[2][0] != '-' %} + {%endif%} 
+                    {{coeffs[2]}}xy
+                    {% if coeffs[3][0] != '-' %} + {%endif%} 
+                    {{coeffs[3]}}x
+                    {% if coeffs[4][0] != '-' %} + {%endif%} 
+                    {{coeffs[4]}}y
+                    {% if coeffs[5][0] != '-' %} + {%endif%} 
+                    {{coeffs[5]}} </td>
+                    
+                    {% elif rhs_type == "Linear" %}
+
+                    <td class="centerCell">{{ coeffs[0]}}x
+                        {% if coeffs[1][0] != '-' %} + {%endif%} 
+                        {{coeffs[1]}}y 
+                        {% if coeffs[2][0] != '-' %} + {%endif%} 
+                        {{coeffs[2]}} </td>
+                    {% else %}
+
+                    <td class="centerCell">{{ coeffs[0]}} </td>
+
                     {%endif%}
+
+                    {%endif%}
+
                     {% endfor%}    
                 {% else %}
 
@@ -69,7 +103,6 @@
             <h3> 
                 {%for res in result_data%}
                 {% set file_name = res.strip() %}
-                    {{file_name}}
                     <img src="{{ url_for('static', filename=file_name) }}" align="middle" />
                 {%endfor%}
             </h3>

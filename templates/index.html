@@ -21,7 +21,7 @@
         }
         else if (selectedValue == "Quadratic"){
             document.getElementById("rhs_coeffs").value = '1,1,1,1,1,1';
-            document.getElementById("rhs_label").innerHTML = 'Ax^2 + By^2 + Cxy + Dx + Ey + F';
+            document.getElementById("rhs_label").innerHTML = 'Ax<sup>2</sup> + By<sup>2</sup> + Cxy + Dx + Ey + F';
         }
         else {
             document.getElementById("rhs_coeffs").value = '1';
@@ -146,7 +146,6 @@
     }
 
     function downloadInput(){
-
         var filename = "tmp.txt";
         var text = getSelectionAsString();
         var blob = new Blob([text], {type:'text/plain'});
@@ -159,11 +158,21 @@
 
 </script>
 
-<p style="margin-left: 40px">
-<label for="readfile">Read input from file: </label>
-<input type="file" dialogtype="read" id="readfile" onchange="readFromFile(this)" accept = ".txt" />
+<h3>
+    Read input from local file
+</h3>
+<p>
+<input type="file" dialogtype="read" id="readfile" onchange="readFromFile(this)" accept = ".txt" value="Choose" />
 <BR/><BR/>
+<h3>
+    Save input to local file
+</h3>
+<input type = "button" onclick = "downloadInput()" value = "Download input file" />
 <BR/><BR/>
+
+<h3>
+    Input data
+</h3>
 
 <label> Right hand side: </label>
 <select name="rhs_choice" id="rhs_choice" onchange="updateRHSLabel()">
@@ -171,13 +180,13 @@
     <option value="Linear">Linear</option>
     <option value="Constant">Constant</option>
   </select>
+  
 
 <BR/><BR/>
-<label id="rhs_label"> Ax^2 + By^2 + Cxy + Dx + Ey + F </label>
+<label id="rhs_label"> Ax<sup>2</sup> + By<sup>2</sup> + Cxy + Dx + Ey + F </label>
 <BR/>
 <input type="text" value="1,1,1,1,1,1" id="rhs_coeffs">
 
-<BR/><BR/>
 <BR/><BR/>
 <label> Domain: </label>
 <input type="text" value="[0,1]x[0,1]" id="domain">
@@ -204,8 +213,6 @@
 
 
 <input type = "button" onclick="runSimulation()" value = "Run simulation">  
-<BR/><BR/>
-<input type = "button" onclick = "downloadInput()" value = "Download input file" />
 
 </body>
 </html> 
