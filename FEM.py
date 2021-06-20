@@ -2,6 +2,7 @@
 import numpy as np
 from DiscPrms import *
 import PySimpleGUI as sg
+import os
 
 
 # Solves a general differential equation using FEM
@@ -110,7 +111,9 @@ class FEM:
         ax.set_title('Contour lines for u(x,y)')
         plt.contour(X, Y, solu)
 
-        plt.show()
+        mypath = "results" + os.sep + "plot.png"
+        plt.savefig(mypath, dpi=300)
+        # plt.show()
 
 # Implements the integrand for a Poisson equation
 # TODO:

@@ -30,10 +30,8 @@
     }
 
     function runSimulation(){
-
-        // Selecting the input element and get its value 
+        // get input values 
         var strng_arr = prepareSimulationData();
-
         const URL = '/run_sim'
         const xhr = new XMLHttpRequest();
         sender = JSON.stringify(strng_arr)
@@ -41,7 +39,7 @@
         xhr.send(sender);
         xhr.onreadystatechange = function() {
         if (xhr.readyState == XMLHttpRequest.DONE) 
-            window.location.href = '/results';
+            window.location.href = '/results'; 
         }
     }
 
@@ -157,7 +155,6 @@
         link.innerHTML = "Download File";
         link.href = window.URL.createObjectURL(blob);
         document.body.appendChild(link);
-
     }
 
 </script>

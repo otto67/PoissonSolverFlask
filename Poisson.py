@@ -114,8 +114,8 @@ class Poisson:
         ax.set_title('Contour lines for u(x,y)')
         plt.contour(X, Y, self.solu)
 
-        mypath = "results" + os.sep + "plot.jpg"
-        plt.savefig(mypath, dpi=300, bbox_inches='tight')
+        mypath = "static" + os.sep + "plot.png"
+        plt.savefig(mypath, dpi=300)
      #   plt.show()
 
     # Compare nodal values of solution

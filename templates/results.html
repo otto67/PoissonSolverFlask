@@ -2,26 +2,79 @@
 <html>
 <head>
     <title>Simulation results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+
+
     <div>
         <h1>Results for input data: </h1>
-        <h3> 
-            {%for value in input_data%}
-                <p>{{ value }}</p>
-            {%endfor%}
-        </h3>
+        <br>
+        <br>
 
+        <table>
+            <tr id="inputHeader">
+            <th>Input</th>
+            <th>Value</th>
+            </tr>
+
+            {%for value in input_data%}            
+            <tr>
+                {% if value.split(':')[0] == "rhs_coeff" %}
+                 
+                {% elif value.split(':')[0] == "bclow" %}
+                <td>Boundary conditions on lower boundary</td>
+                <td class="centerCell">{{ value.split(':')[1] }}</td>
+
+                {% elif value.split(':')[0] == "bcupp" %}
+                <td>Boundary conditions on upper boundary</td>
+                <td class="centerCell">{{ value.split(':')[1] }}</td>
+
+                {% elif value.split(':')[0] == "bcleft" %}
+                <td>Boundary conditions on left boundary</td>
+                <td class="centerCell">{{ value.split(':')[1] }}</td>
+
+                {% elif value.split(':')[0] == "bcright" %}
+                <td>Boundary conditions on right boundary</td>
+                <td class="centerCell">{{ value.split(':')[1] }}</td>
+
+
+                {% elif value.split(':')[0] == "Right hand side" %}
+                <td>{{ value.split(':')[0] }}</td>
+                <td class="centerCell">{{ value.split(':')[1] }}</td>
+                    {%for tmp in input_data%}
+
+                    {% if tmp.split(':')[0] == "rhs_coeff" %}
+                <tr>
+                    <td>Right hand side coefficients</td>
+                    <td class="centerCell">{{ tmp.split(':')[1] }}</td>
+                </tr>
+                    {%endif%}
+                    {% endfor%}    
+                {% else %}
+
+                <td>{{ value.split(':')[0] }}</td>
+                <td class="centerCell">{{ value.split(':')[1] }}</td>
+
+                {% endif %}
+            </tr>
+            {%endfor%}
+        </table>
          <p>
-            <h1>Result plots: </h1>
+
+        <br>
+        <br>
+
+            <h1>Plots of solution: </h1>
             <h3> 
-                {%for value in result_data%}
-                    <p><img src= {{ value }} alt="none"></p>
-                    <p>{{value}}</p>
+                {%for res in result_data%}
+                {% set file_name = res.strip() %}
+                    {{file_name}}
+                    <img src="{{ url_for('static', filename=file_name) }}" align="middle" />
                 {%endfor%}
             </h3>
-           
          </p>
+
     </div>
 </body>
 </html>
