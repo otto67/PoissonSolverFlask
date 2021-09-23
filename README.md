@@ -4,7 +4,7 @@ Simulation results are presented at a separate site.
 
 ### Note 
 
-* For now, only basic frame is implemented.
+* 
 * **Test**
     * Test
 
