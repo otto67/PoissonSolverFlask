@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <body>
 
 <BR/><BR/>     
@@ -38,8 +39,12 @@
         xhr.open('POST', URL);
         xhr.send(sender);
         xhr.onreadystatechange = function() {
-        if (xhr.readyState == XMLHttpRequest.DONE) 
-            window.location.href = '/results'; 
+        if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 200)
+            
+            var retval = JSON.parse(xhr.responseText);
+       
+            if(retval)
+                window.location.href = retval[retval.length-1] 
         }
     }
 
@@ -141,22 +146,76 @@
         retval += document.getElementById("leftbound").value;
         retval += "\nbclow:";
         retval += document.getElementById("lowbound").value;
-
+        
         return retval;
     }
 
     function downloadInput(){
-        var filename = "tmp.txt";
-        var text = getSelectionAsString();
-        var blob = new Blob([text], {type:'text/plain'});
-        var link = document.createElement("a");
+        let filename = "tmp.txt";
+        let text = getSelectionAsString();
+        let blob = new Blob([text], {type:'text/plain'});
+        let link = document.createElement("a");
         link.download = filename;
         link.innerHTML = "Download File";
         link.href = window.URL.createObjectURL(blob);
         document.body.appendChild(link);
     }
 
+    function promiseFetch(){
+        const promise1 = Promise.reject(132);
+        const promise2 = new Promise((resolve) => setTimeout(resolve, 100, 'quick'));
+        const promise3 = new Promise((resolve) => setTimeout(resolve, 500, 'slow'));
+
+        const promises = [promise1, promise2, promise3];
+
+        Promise.any(promises).then((value) => console.log(value))
+        .catch(err => console.log('Rejected ' + err))
+
+        
+        fetch('/test')
+        .then(data => data.json())
+        .then(data => {
+             
+            for (var i=0; i<data.length; i++)
+                console.log("index " + i + ": " + data[i])
+            
+            data.forEach((element) => console.log("Element is " + element))
+                
+            })       
+        .catch(err => console.log(err))
+    }
+
+    function secondFetch(){
+        console.log('Entering secondFetch')
+        fetch('/test2')
+        .then(data => data.json())
+        .then(data => {console.log("Returned : " + data.first + " and " + data.second); return data})
+        .then(data => document.getElementById('response_field').innerHTML = data['first'] + " and " + data['second'])
+        .catch(err => console.log('From secondFetch ' + err))
+    }
+
+    function thirdFetch(){
+        console.log('Entering thirdFetch')
+        senddata = "Here is data from JS"
+        fetch('/test2', { method : "POST", body : JSON.stringify(senddata)})
+        .then(data => data.json())
+        .then(data => {console.log("Returned : " + data); return data})
+        .then(data => document.getElementById('response_field').innerHTML = data)
+        .catch(err => console.log('From thirdFetch ' + err))
+    }
 </script>
+
+<h3>
+    Test promises and fetch
+</h3>
+<input type = "button" onclick = "promiseFetch()" value = "Test button" />
+<input type = "button" onclick = "secondFetch()" value = "Test button 2" />
+<input type = "button" onclick = "thirdFetch()" value = "Test button 3" />
+<BR/><BR/>
+
+<p id='response_field'></p>
+
+<BR/><BR/>
 
 <h3>
     Read input from local file

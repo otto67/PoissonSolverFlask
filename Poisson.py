@@ -1,7 +1,10 @@
 import matplotlib.pyplot as plt
 import numpy as np
-import os
+import comboplot as plotter
+from RHS import RHS
+from BC import BC
 
+# Class for solving a Poisson equation using FDM 
 class Poisson:
 
     def __init__(self, nnox=41, nnoy=41, xmax=1, ymax=1, xmin=0, ymin=0):
@@ -16,12 +19,11 @@ class Poisson:
         self.A = np.zeros((nnox * nnoy, nnoy * nnox))
         self.b = np.zeros(nnox * nnoy)
         self.phi = np.zeros((nnoy * nnox))
-        self.u = np.zeros(nnox)
         self.analy = np.zeros(nnox)
         self.solu = np.zeros((nnoy, nnox))
 
-    def f(self, x, y):
-        return x*x
+        self.rhs = RHS()
+        self.bc = BC()
 
     def analytic(self, x, y):
         return (x**4/12) + (x/12)
@@ -40,11 +42,7 @@ class Poisson:
         for i in range(0, self.nnoy):
             for j in range(0, self.nnox):
                 x, y = j*h1, i * h2
-                self.b[i * self.nnox + j] = self.f(x, y)
-
-    # Actual (essential) boundary conditions
-    def essBC(self, x, y):
-        return self.analytic(x, y)
+                self.b[i * self.nnox + j] = self.rhs.f(x, y)
 
     # Modify matrix and right hand side vector to include essential BC's
     def fillEssBC(self):
@@ -55,8 +53,8 @@ class Poisson:
                 self.A[self.nnox * (self.nnoy - 1) + i, j] = 0.0 
             self.A[i, i] = 1.0
             self.A[((self.nnoy - 1) * self.nnox) + i, (self.nnox * (self.nnoy - 1)) + i] = 1.0
-            self.b[i] = self.essBC(i * self.dx, self.ymin)
-            self.b[self.nnox * (self.nnoy - 1) + i] = self.essBC(i * self.dx, self.ymax)
+            self.b[i] = self.bc.essBC(i * self.dx, self.ymin, 4)
+            self.b[self.nnox * (self.nnoy - 1) + i] = self.bc.essBC(i * self.dx, self.ymax, 2)
 
         # Boundary conditions for left and right boundaries of a rectangle
         for i in range(0, self.nnoy):
@@ -65,8 +63,8 @@ class Poisson:
                 self.A[(self.nnox - 1) + (i * self.nnox), j] = 0.0
             self.A[i * self.nnox, i * self.nnox] = 1.0
             self.A[(self.nnox - 1) + i * self.nnox, (self.nnox - 1) + i * self.nnox] = 1.0
-            self.b[i * self.nnox] = self.essBC(self.xmin, i * self.dy)
-            self.b[(self.nnox - 1) + (i * self.nnox)] = self.essBC(self.xmax, i * self.dy)
+            self.b[i * self.nnox] = self.bc.essBC(self.xmin, i * self.dy, 3)
+            self.b[(self.nnox - 1) + (i * self.nnox)] = self.bc.essBC(self.xmax, i * self.dy, 1)
         
     def solve(self):
 
@@ -74,57 +72,16 @@ class Poisson:
         self.fillEssBC()
         self.phi = np.linalg.solve(self.A, self.b)
 
-        # Solution along an y center line. For comparison with analytic solution
-        for i in range(0, self.nnox):
-            self.u[i] = self.phi[int(self.nnoy / 2) * self.nnox + i]
-            self.analy[i] = self.analytic(i * self.dx, 0.5)
-
+        
         # Nodal values of solution
         for i in range(0, self.nnoy):
             for j in range(0, self.nnox):
                 self.solu[i, j] = self.phi[i * self.nnox + j]
-        self.plot()
+        
+        plotter.plot(self.solu, 1/self.nnox)
 
-    def plot(self):
-
-        x = np.arange(self.xmin, self.xmax, (self.xmax - self.xmin) / self.nnox)
-        y = np.arange(self.ymin, self.ymax, (self.ymax - self.ymin) / self.nnoy)
-        X, Y = np.meshgrid(x, y)
-
-        fig = plt.figure()
-        ax = fig.add_subplot(2, 2, 1, projection='3d')
     
-        ax.plot_surface(X, Y, self.solu, cmap='viridis', edgecolor='none')
-        ax.set_title('Surface plot u(x,y)')
-        ax.set_xlabel('X')
-        ax.set_ylabel('Y')
-        ax.set_zlabel('u(x,y)')
-
-        ax = fig.add_subplot(2, 2, 2)
-        ax.set_title('2D projection of u(x,y)')
-        plt.imshow(self.solu, cmap='hot')
-        plt.colorbar()
-
-        ax = fig.add_subplot(2, 2, 3)
-        ax.set_title('Fake test vector plot of u(x,y)')
-        # ax.set_ylabel('Damped oscillation')
-        plt.quiver(X, Y, self.solu, self.solu)
-        ax = fig.add_subplot(2, 2, 4)
-        ax.set_title('Contour lines for u(x,y)')
-        plt.contour(X, Y, self.solu)
-
-        plt.subplots_adjust(left=0.1,
-                    bottom=0.1, 
-                    right=0.9, 
-                    top=0.9, 
-                    wspace=0.6, 
-                    hspace=0.4)
-
-        mypath = "static" + os.sep + "plot.png"
-        plt.savefig(mypath, dpi=300)
-     
-
-    # Compare nodal values of solution
+    # Compare nodal values of solution, report L2 error
     def compare2analytic(self):
 
         l2error = 0.0        
@@ -138,6 +95,6 @@ class Poisson:
 # Solve to verify that analytical solution is reproduced
 if __name__ == '__main__':
 
-    solver = Poisson(68, 38, 2, 1, -1, -1)
+    solver = Poisson(51,51, 1, 1, 0, 0)
     solver.solve()
     solver.compare2analytic()

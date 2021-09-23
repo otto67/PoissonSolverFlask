@@ -1,6 +1,8 @@
-from flask import Flask, url_for, render_template, redirect, request, session, make_response
+import re
+from typing import get_args
+from flask import Flask, url_for, render_template, redirect, request, session, make_response, jsonify
 from markupsafe import escape
-import json
+import json 
 import os
 
 from numpy import imag
@@ -39,9 +41,42 @@ def run_sim():
     mylist = json.loads(input_data.decode())
     sim.run(mylist)
    
-    image_names = os.listdir('static')   
-    template_context = dict(added=image_names)
+    image_names = os.listdir('static')
+    retval = []
+    for i in image_names:
+        if i.find('.png') : # Remove CSS file from list
+            retval.append('/results')    
+    
+    template_context = jsonify(retval)
     return make_response(template_context)
+
+@app.route('/test', methods=['GET'])
+def test():
+    print("Serving test request")
+    image_names = os.listdir('static')
+
+    print(request.headers)
+
+    return jsonify(image_names)
+
+@app.route('/test2', methods=['GET', 'POST'])
+def test2():
+
+    print("Serving test 2 request is " + request.method)    
+
+    if request.method == 'GET':
+        retval = {}
+        retval['first'] = 'myfirst'
+        retval['second'] = 'mysecond'
+    else:
+        print("POST request, got " + json.loads(request.data.decode()))
+        retval = request.data.decode()
+
+
+    print(request.headers)
+
+    return jsonify(retval)
+
 
 if __name__ == "__main__":
     app.run(host ='0.0.0.0')  
