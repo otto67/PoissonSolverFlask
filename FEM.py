@@ -93,7 +93,7 @@ class FEM:
             self.grid.phi = np.linalg.solve(self.grid.A, self.grid.b)
             sol = self.grid.interpolSolution()
             if not self.noplot:
-                plotter.plot(sol, 1/self.nnox, save_to_file=True)
+                plotter.plot(sol, 1/self.prms.nno_x, save_to_file=True)
             
 
 # Implements the integrand for a Poisson equation
