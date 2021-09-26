@@ -92,8 +92,9 @@ class FEM:
             self.assembleLinEqSys(time)
             self.grid.phi = np.linalg.solve(self.grid.A, self.grid.b)
             sol = self.grid.interpolSolution()
+            length = self.prms.x_max - self.prms.x_min
             if not self.noplot:
-                plotter.plot(sol, 1/self.prms.nno_x, save_to_file=True)
+                plotter.plot(sol, length/self.prms.nno_x, save_to_file=True)
             
 
 # Implements the integrand for a Poisson equation
