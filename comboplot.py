@@ -3,9 +3,9 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot(solu, delta, save_to_file=False):
+def plot(solu, delta, save_to_file=False, x_min=0.0, x_max=1.0):
 
-        x = y = np.arange(0.0, 1.0, delta)
+        x = y = np.arange(x_min, x_max, delta)
         X, Y = np.meshgrid(x, y)
 
         fig = plt.figure(figsize=(20, 20))
