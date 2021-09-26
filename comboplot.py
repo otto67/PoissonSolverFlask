@@ -31,6 +31,6 @@ def plot(solu, delta, save_to_file=False):
         plt.contour(X, Y, solu)
 
         if (save_to_file):
-            plot.save()
+            plt.save()
         else:        
             plt.show()
