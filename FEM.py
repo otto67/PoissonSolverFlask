@@ -10,10 +10,11 @@ from BC import BC
 # integral
 class FEM:
 
-    def __init__(self, params, grid_):
+    def __init__(self, params, grid_, no_plot=False):
         self.prms = params
         self.grid = grid_
         self.bc = BC()
+        self.noplot = no_plot
 
     # Adds bc's to the dictionary of the grid object
     def fillEssBC(self):
@@ -91,7 +92,9 @@ class FEM:
             self.assembleLinEqSys(time)
             self.grid.phi = np.linalg.solve(self.grid.A, self.grid.b)
             sol = self.grid.interpolSolution()
-            plotter.plot(sol, 1/self.prms.nno_x)
+            if not self.noplot:
+                plotter.plot(self.solu, 1/self.nnox, save_to_file=True)
+            
 
 # Implements the integrand for a Poisson equation
 # This particular subclass is used for veryfying the 
