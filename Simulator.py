@@ -28,7 +28,7 @@ class FEMPoissonSub(FEM.PoissonFEM):
         self.rhs = polynomialRHS()
 
     def nodeValues(self):
-        return self.grid.interpolSolution(self)
+        return self.grid.interpolSolution()
 
 
 # Parses a float from a string 
