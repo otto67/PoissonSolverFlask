@@ -39,7 +39,7 @@ def run_sim():
     
     # Convert to list before passing to simulator
     mylist = json.loads(input_data.decode())
-    sim.run(mylist)
+    sim.run(mylist, no_plot=False)
    
     image_names = os.listdir('static')
     retval = []
