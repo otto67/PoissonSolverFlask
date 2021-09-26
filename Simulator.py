@@ -27,7 +27,7 @@ class FEMPoissonSub(FEM.PoissonFEM):
         self.bc = constBC()
         self.rhs = polynomialRHS()
 
-    def nodeValues():
+    def nodeValues(self):
         return self.grid.interpolSolution(self)
 
 
