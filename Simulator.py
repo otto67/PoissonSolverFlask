@@ -10,8 +10,8 @@ from BC import constBC
 # and boundary conditions for FDM
 class PoissonSub(Poisson):
 
-    def __init__(self, nno_x, nno_y, xmax, ymax, xmin, ymin):
-        super().__init__(nno_x, nno_y, xmax, ymax, xmin, ymin)
+    def __init__(self, nno_x, nno_y, xmax, ymax, xmin, ymin, no_plot=False):
+        super().__init__(nno_x, nno_y, xmax, ymax, xmin, ymin, no_plot)
         self.bc = constBC()
         self.rhs = polynomialRHS()
 
@@ -129,7 +129,7 @@ def parse_domain(arg):
 
 
 
-def run(mylist):
+def run(mylist, no_plot=True):
 
     print("Simulator started \n")
     
@@ -161,7 +161,7 @@ def run(mylist):
     nno_y = int(nno/nno_x)
 
     if sol_met == 'FEM':
-        print("Creating FEM solver")
+        print("Creating FEM solver \n")
         print("NOTE: There is  bug in the FEM solver. \n Works if rhs=0")
         parameters = dsc.DiscPrms(nnx=nno_x, nny=nno_y, dt=1000, t_max=2000)
         grid = dsc.Grid2d(parameters)
@@ -178,8 +178,8 @@ def run(mylist):
         return sim.nodeValues()
     
     else: # Finite differences
-
-        sim = PoissonSub(nno_x, nno_y, x_max, y_max, x_min, y_min)
+        print("Creating FDM solver \n")
+        sim = PoissonSub(nno_x, nno_y, x_max, y_max, x_min, y_min, no_plot)
         sim.rhs.attachRHS(parse_rhs(values['Right hand side'], values['rhs_coeff'].strip()))
         sim.bc.attachBC(parse_bc(values))
 

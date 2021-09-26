@@ -3,7 +3,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot(solu, delta):
+def plot(solu, delta, save_to_file=False):
 
         x = y = np.arange(0.0, 1.0, delta)
         X, Y = np.meshgrid(x, y)
@@ -30,4 +30,7 @@ def plot(solu, delta):
         ax.set_title('Contour lines for u(x,y)')
         plt.contour(X, Y, solu)
 
-        plt.show()
+        if (save_to_file):
+            plot.save()
+        else:        
+            plt.show()

@@ -7,13 +7,14 @@ from BC import BC
 # Class for solving a Poisson equation using FDM 
 class Poisson:
 
-    def __init__(self, nnox=41, nnoy=41, xmax=1, ymax=1, xmin=0, ymin=0):
+    def __init__(self, nnox=41, nnoy=41, xmax=1, ymax=1, xmin=0, ymin=0, no_plot=False):
         self.nnoy = nnoy
         self.nnox = nnox
         self.xmax = xmax
         self.ymax = ymax
         self.xmin = xmin
         self.ymin = ymin
+        self.noplot = no_plot
 
         self.dx, self.dy = (xmax - xmin) / (nnox - 1), (ymax - ymin) / (nnoy - 1)
         self.A = np.zeros((nnox * nnoy, nnoy * nnox))
@@ -78,7 +79,8 @@ class Poisson:
             for j in range(0, self.nnox):
                 self.solu[i, j] = self.phi[i * self.nnox + j]
         
-        plotter.plot(self.solu, 1/self.nnox)
+        if not self.noplot:
+            plotter.plot(self.solu, 1/self.nnox)
 
     
     # Compare nodal values of solution, report L2 error
