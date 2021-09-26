@@ -1,6 +1,5 @@
 from Poisson import Poisson
 import DiscPrms as dsc 
-import PySimpleGUI as sg
 import FEM
 import sys
 from RHS import polynomialRHS
