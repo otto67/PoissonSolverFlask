@@ -93,7 +93,7 @@ class FEM:
             self.grid.phi = np.linalg.solve(self.grid.A, self.grid.b)
             sol = self.grid.interpolSolution()
             if not self.noplot:
-                plotter.plot(sol, self.prms.x_max - self.prms.x_min/self.prms.nno_x, save_to_file=True, x_max=self.prms.x_max, x_min=self.prms.x_min
+                plotter.plot(sol, (self.prms.x_max - self.prms.x_min)/self.prms.nno_x, save_to_file=True, x_max=self.prms.x_max, x_min=self.prms.x_min
 )
             
 
