@@ -31,6 +31,7 @@ def plot(solu, delta, save_to_file=False):
         plt.contour(X, Y, solu)
 
         if (save_to_file):
-            plt.savefig('plot.png')
+            print ("Saving to file")
+            plt.savefig('static/plot.png')
         else:        
             plt.show()
