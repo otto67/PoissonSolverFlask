@@ -128,7 +128,7 @@ def parse_domain(arg):
 
 
 
-def run(mylist, no_plot=True):
+def run(mylist, no_plot=True, save_to_file=True):
 
     print("Simulator started \n")
     
@@ -183,7 +183,7 @@ def run(mylist, no_plot=True):
         sim.bc.attachBC(parse_bc(values))
 
         if not sim.rhs.rhs:
-            print("Illegal right hand side ", solver.rhs.rhs)
+            print("Illegal right hand side ", sim.rhs.rhs)
 
         sim.solve()
 
