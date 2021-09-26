@@ -128,7 +128,7 @@ def parse_domain(arg):
 
 
 
-def run(mylist, no_plot=True, save_to_file=True):
+def run(mylist, no_plot=True):
 
     print("Simulator started \n")
     
@@ -162,7 +162,8 @@ def run(mylist, no_plot=True, save_to_file=True):
     if sol_met == 'FEM':
         print("Creating FEM solver \n")
         print("NOTE: There is  bug in the FEM solver. \n Works if rhs=0")
-        parameters = dsc.DiscPrms(nnx=nno_x, nny=nno_y, dt=1000, t_max=2000)
+        nnx=41, nny=41, dt=0.05, x_max=1, y_max=1, t_max=1, x_min=0, y_min=0
+        parameters = dsc.DiscPrms(nnx=nno_x, nny=nno_y, dt=1000, x_max=x_max, y_max=y_max, t_max=2000, x_min=x_min, y_min=y_min)
         grid = dsc.Grid2d(parameters)
         # For now, assume only Dirichlet BC's 
         boind_list = [1,2,3,4]
