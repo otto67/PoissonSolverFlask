@@ -80,7 +80,7 @@ class Poisson:
                 self.solu[i, j] = self.phi[i * self.nnox + j]
         
         if not self.noplot:
-            plotter.plot(self.solu, 1/self.nnox, save_to_file=True)
+            plotter.plot(self.solu, (self.xmax - self.xmin)/self.nnox, save_to_file=True, x_min=self.xmin, x_max=self.xmax)
 
     
     # Compare nodal values of solution, report L2 error
