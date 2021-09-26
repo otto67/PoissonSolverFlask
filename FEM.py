@@ -1,7 +1,6 @@
 # Base class for solving a PDE with FEM
 import numpy as np
 from DiscPrms import *
-import PySimpleGUI as sg
 import comboplot as plotter
 from RHS import RHS
 from BC import BC
