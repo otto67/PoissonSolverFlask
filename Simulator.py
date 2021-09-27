@@ -189,19 +189,24 @@ def run(mylist, no_plot=True):
         boind_list = [1,2,3,4]
         grid.setBoindWithEssBC(boind_list)                
         sim = FEMPoissonSub(parameters, grid)
-        sim.rhs.attachRHS(parse_rhs(values['Right hand side'], values['rhs_coeff'].strip()))
         
-        bcs = parse_bc(values)
-        if ((len(bcs) != 1) or (bcs[0] != 0)):
+        rhs_val = parse_rhs(values['Right hand side'], values['rhs_coeff'].strip())
+
+        if ((len(rhs_val) != 1) or (rhs_val[0] != 0)):
+            print("Values: ", len(rhs_val), " and ", rhs_val[0])
             return -1
 
+        sim.rhs.attachRHS(parse_rhs(values['Right hand side'], values['rhs_coeff'].strip()))                
         sim.bc.attachBC(parse_bc(values))
         
         if not sim.rhs.rhs:
             print("Illegal right hand side ", sim.rhs.rhs)
                 
         sim.solve(-1)
-        return sim.nodeValues()
+        if (no_plot):
+           return sim.nodeValues()
+        else:
+            return 0
     
     else: # Finite differences
         print("Creating FDM solver \n")
@@ -213,7 +218,10 @@ def run(mylist, no_plot=True):
             print("Illegal right hand side ", sim.rhs.rhs)
 
         sim.solve()
-        return sim.nodeValues()
+        if (no_plot):
+            return sim.nodeValues()
+        else:    
+            return 0
 
 # Will probably never be used
 if __name__ == '__main__':

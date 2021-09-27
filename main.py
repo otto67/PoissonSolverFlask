@@ -41,11 +41,10 @@ def run_sim():
     mylist = json.loads(input_data.decode())
     retval = sim.run(mylist, no_plot=False)
     if (retval == -1):
-        ret = ['FEM only applicable for right hand side equal to zero']
+        ret = ['<h3>FEM only applicable for constant right hand side equal to zero </h3>']
         template_context = jsonify(ret)
         return make_response(template_context, 400)        
-    
-   
+       
     image_names = os.listdir('static')
     retval = []
     for i in image_names:
