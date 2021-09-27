@@ -14,6 +14,7 @@ class PoissonSub(Poisson):
         self.bc = constBC()
         self.rhs = polynomialRHS()
 
+    # Used for simulators wanting the nodal values of the solution
     def nodeValues(self):
         return self.solu
         
@@ -27,11 +28,12 @@ class FEMPoissonSub(FEM.PoissonFEM):
         self.bc = constBC()
         self.rhs = polynomialRHS()
 
+    # Used for simulators wanting the nodal values of the solution
     def nodeValues(self):
         return self.grid.interpolSolution()
 
 
-# Parses a float from a string 
+# Parses a float from a string
 def string2float(str):
 
     sign = 1
@@ -55,8 +57,16 @@ def string2float(str):
     print(" S2F 2: Error, ", str, " is not a valid number ")
     return 0.0
 
-# Functions to read from input form
 def parse_rhs(arg, coeff):
+    """ Parses information on the right hand side of the Poisson eq. 
+
+    Args:
+        arg (string): Specifies the degree of the (polynomial) right hand side 
+        coeff (string): Polynom coefficients separated by a comma 
+
+    Returns:
+        list: Right hand side coefficients
+    """    
     a = []
     lst = coeff.split(',')
 
@@ -86,6 +96,15 @@ def parse_rhs(arg, coeff):
 
 
 def parse_bc(arg):
+    """ Parses the (constant) boundary conditions
+
+    Args:
+        arg (dictionary): Contains the BC values at each boundary
+
+    Returns:
+        list: Boundary conditions at each boundary, in the order defined for the
+        boundary indices
+    """    
     a = []
     a.append(string2float(arg['bcright'].strip()))
     a.append(string2float(arg['bcupp'].strip()))
@@ -162,6 +181,8 @@ def run(mylist, no_plot=True):
     if sol_met == 'FEM':
         print("Creating FEM solver \n")
         print("NOTE: There is  bug in the FEM solver. \n Works if rhs=0")
+        print("Boundary conditions are incorrectly incorporated")
+
         parameters = dsc.DiscPrms(nnx=nno_x, nny=nno_y, dt=1000, x_max=x_max, y_max=y_max, t_max=2000, x_min=x_min, y_min=y_min)
         grid = dsc.Grid2d(parameters)
         # For now, assume only Dirichlet BC's 
@@ -169,7 +190,13 @@ def run(mylist, no_plot=True):
         grid.setBoindWithEssBC(boind_list)                
         sim = FEMPoissonSub(parameters, grid)
         sim.rhs.attachRHS(parse_rhs(values['Right hand side'], values['rhs_coeff'].strip()))
+        
+        bcs = parse_bc(values)
+        if ((len(bcs) != 1) or (bcs[0] != 0)):
+            return -1
+
         sim.bc.attachBC(parse_bc(values))
+        
         if not sim.rhs.rhs:
             print("Illegal right hand side ", sim.rhs.rhs)
                 
@@ -186,7 +213,6 @@ def run(mylist, no_plot=True):
             print("Illegal right hand side ", sim.rhs.rhs)
 
         sim.solve()
-
         return sim.nodeValues()
 
 # Will probably never be used

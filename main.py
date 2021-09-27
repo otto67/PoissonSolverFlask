@@ -39,7 +39,12 @@ def run_sim():
     
     # Convert to list before passing to simulator
     mylist = json.loads(input_data.decode())
-    sim.run(mylist, no_plot=False)
+    retval = sim.run(mylist, no_plot=False)
+    if (retval == -1):
+        ret = ['FEM only applicable for right hand side equal to zero']
+        template_context = jsonify(ret)
+        return make_response(template_context, 400)        
+    
    
     image_names = os.listdir('static')
     retval = []
