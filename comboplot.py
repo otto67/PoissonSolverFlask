@@ -9,7 +9,7 @@ def plot(solu, delta, save_to_file=False, x_min=0.0, x_max=1.0):
         X, Y = np.meshgrid(x, y)
 
         fig = plt.figure(figsize=(20, 20))
-        fig.suptitle("Simulation results")
+#        fig.suptitle("Simulation results")
 
         ax = fig.add_subplot(2, 2, 1, projection='3d')
 
