@@ -54,3 +54,32 @@ td {
 .centerCell {
   text-align: left;
 }
+
+.header {
+  background-color:burlywood;
+  border: 2px solid black;
+  padding: 20px;
+  width: 50%;
+  text-align: center;
+}
+
+.fileio {
+  background-color: tomato;
+  border: 2px solid black;
+  padding: 20px;
+  width: 50%;
+}
+
+.datainput {
+  background-color:coral;
+  border: 2px solid black;
+  padding: 20px;
+  width: 50%;
+}
+
+.runsimbutton {
+  background-color:chartreuse;
+  border: 2px solid black;
+  padding: 20px;
+  width: 50%;
+}

@@ -3,9 +3,12 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <body>
 
-<BR/><BR/>     
-<h2>Input interface for Python Poisson solver -- <span id="datetime"></span>  </h2>
 <BR/><BR/>
+<div class=header>     
+<h2>Input interface for Python Poisson solver -- <span id="datetime"></span>  </h2>
+
+</div>
+
 <script>
     var dt = new Date();
     document.getElementById("datetime").innerHTML = dt.toLocaleDateString();
@@ -225,7 +228,7 @@
 
 <BR/><BR/> -->
 
-
+<div class="fileio"> 
 <h3>
     Read input from local file
 </h3>
@@ -236,8 +239,9 @@
     Save input to local file
 </h3>
 <input type = "button" onclick = "downloadInput()" value = "Download input file" />
-<BR/><BR/>
+</div>
 
+<div class=datainput>
 <h3>
     Input data
 </h3>
@@ -280,8 +284,12 @@
 
 </p>
 
+</div>
+<div class="runsimbutton">
 
-<input type = "button" onclick="runSimulation()" value = "Run simulation">  
+<input   style=float:right; type = "button" onclick="runSimulation()" value = "Run simulation">  
+<br>
+</div>
 
 </body>
 </html> 
