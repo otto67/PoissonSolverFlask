@@ -1,6 +1,7 @@
 from Poisson import Poisson
 import DiscPrms as dsc 
 import FEM
+import math
 import sys
 from RHS import polynomialRHS
 from BC import constBC
@@ -183,6 +184,10 @@ def run(mylist, no_plot=True):
         print("NOTE: There is  bug in the FEM solver. \n Works if rhs=0")
         print("Boundary conditions are incorrectly incorporated")
 
+
+        if ((not math.isclose(x_min,0.0)) or (not math.isclose(x_max,1.0)) or (not math.isclose(y_min, 0.0)) or (not math.isclose(y_max, 1.0))):
+            return -1
+
         parameters = dsc.DiscPrms(nnx=nno_x, nny=nno_y, dt=1000, x_max=x_max, y_max=y_max, t_max=2000, x_min=x_min, y_min=y_min)
         grid = dsc.Grid2d(parameters)
         # For now, assume only Dirichlet BC's 
@@ -192,8 +197,7 @@ def run(mylist, no_plot=True):
         
         rhs_val = parse_rhs(values['Right hand side'], values['rhs_coeff'].strip())
 
-        if ((len(rhs_val) != 1) or (rhs_val[0] != 0)):
-            print("Values: ", len(rhs_val), " and ", rhs_val[0])
+        if ((len(rhs_val) != 1) or (rhs_val[0] != 0) ):
             return -1
 
         sim.rhs.attachRHS(parse_rhs(values['Right hand side'], values['rhs_coeff'].strip()))                

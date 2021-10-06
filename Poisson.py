@@ -80,8 +80,8 @@ class Poisson:
                 self.solu[i, j] = self.phi[i * self.nnox + j]
         
         if not self.noplot:
-            plotter.plot(self.solu, (self.xmax - self.xmin)/self.nnox, save_to_file=True, x_min=self.xmin, x_max=self.xmax)
-
+            plotter.plot(self.solu, (self.xmax - self.xmin)/self.nnox, save_to_file=True, 
+            x_min=self.xmin, x_max=self.xmax, y_min = self.ymin, y_max= self.ymax, dy=(self.ymax - self.ymin)/self.nnoy)
     
     # Compare nodal values of solution, report L2 error
     def compare2analytic(self):

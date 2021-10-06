@@ -50,11 +50,12 @@
                 if(retval)
                     window.location.href = retval[retval.length-1]; 
             }
-            else if (xhr.readyState == XMLHttpRequest.DONE && xhr.status == 400){
+            else if (xhr.readyState == XMLHttpRequest.DONE){
                 var data = JSON.parse(xhr.responseText);
                 document.getElementById('response_field').innerHTML = data; 
                 document.getElementById("rhs_coeffs").value = '0';
                 document.getElementById("rhs_choice").selectedIndex = 2;
+                document.getElementById("domain").value = '[0,1]x[0,1]'
             }   
         }
     }

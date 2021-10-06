@@ -3,11 +3,15 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
-def plot(solu, delta, save_to_file=False, x_min=0.0, x_max=1.0):
+def plot(solu, delta, save_to_file=False, x_min=0.0, x_max=1.0, y_min=0.0, y_max=1.0, dy=-1.0):
 
-        x = y = np.arange(x_min, x_max, delta)
+        x = np.arange(x_min, x_max, delta)
+ 
+        if (dy < 0.0): 
+            dy = delta
+        y = np.arange(y_min, y_max, dy)     
+        
         X, Y = np.meshgrid(x, y)
-
         fig = plt.figure(figsize=(20, 20))
 #        fig.suptitle("Simulation results")
 
@@ -26,7 +30,7 @@ def plot(solu, delta, save_to_file=False, x_min=0.0, x_max=1.0):
         plt.colorbar()
 
         ax = fig.add_subplot(2, 2, 3)
-        ax.set_title('Fake test vector plot of (u(x,y), u(x,y)')
+        ax.set_title('Fake test vector plot of (u(x,y), u(x,y))')
         ax.set_ylabel('y coordinate')
         ax.set_xlabel('x coordinate')
         plt.quiver(X, Y, solu, solu)

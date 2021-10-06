@@ -41,7 +41,7 @@ def run_sim():
     mylist = json.loads(input_data.decode())
     retval = sim.run(mylist, no_plot=False)
     if (retval == -1):
-        ret = ['<h3>FEM only applicable for constant right hand side equal to zero </h3>']
+        ret = ['<h3>FEM only works for constant right hand side equal to zero and domain [0,1 x 0,1]  </h3>']
         template_context = jsonify(ret)
         return make_response(template_context, 400)        
        
